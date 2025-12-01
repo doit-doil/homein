@@ -23,8 +23,8 @@
       width: 800px;
       max-width: 80vw;
       display: block;
-      opacity: 1;
-      transition: opacity 2s ease; /* 페이드인 시간 */
+      opacity: 1; /* 페이드 제거로 항상 1 */
+      transition: none; /* 페이드 제거 */
     }
 
     button {
@@ -81,35 +81,25 @@
     let isTransitioning = false;
 
     btn.addEventListener("click", () => {
-      // 마지막 이미지에서 버튼 → 네이버 이동
       if (currentIndex === images.length - 1 && !isTransitioning) {
         window.location.href = "https://www.naver.com";
         return;
       }
 
       if (isTransitioning) return;
-
       isTransitioning = true;
       btn.disabled = true;
 
-      // **페이드인만 있는 전환**
       currentIndex++;
-      imgEl.style.opacity = "0";  // 먼저 투명하게 만들고
+      imgEl.src = images[currentIndex]; // 페이드 없이 즉시 변경
 
-      setTimeout(() => {
-        imgEl.src = images[currentIndex]; // 이미지 변경
-        imgEl.style.opacity = "1";        // 페이드인 시작
+      // 바로 버튼 활성화
+      isTransitioning = false;
+      btn.disabled = false;
 
-        // 페이드인 시간 끝나면 버튼 활성화
-        setTimeout(() => {
-          isTransitioning = false;
-          btn.disabled = false;
-
-          if (currentIndex === images.length - 1) {
-            finalMessage.classList.add("show");
-          }
-        }, 2000);  // 페이드인 시간
-      }, 10); // 살짝 딜레이 줘야 transition 먹힘
+      if (currentIndex === images.length - 1) {
+        finalMessage.classList.add("show");
+      }
     });
   </script>
 </body>

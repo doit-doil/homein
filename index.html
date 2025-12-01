@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>도일 이벤트 - 이미지 전환</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .main-image {
+      width: 800px;
+      max-width: 80vw;
+      display: block;
+      opacity: 1;
+      transition: opacity 2s ease; /* 페이드인 시간 */
+    }
+
+    button {
+      margin-top: 16px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 999px;
+      background: #fff;
+      color: #000;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .message {
+      margin-top: 24px;
+      font-size: 24px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .message.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="img/1.png" class="main-image" id="mainImage" />
+
+    <div>
+      <button id="controlBtn">▶</button>
+    </div>
+
+    <div class="message" id="finalMessage">
+      도일 실종 X 산타 구출 성공!
+    </div>
+  </div>
+
+  <script>
+    const images = [
+      "img/1.png",
+      "img/2.png",
+      "img/3.png",
+      "img/4.png",
+      "img/5.png",
+      "img/6.png"
+    ];
+
+    const imgEl = document.getElementById("mainImage");
+    const btn = document.getElementById("controlBtn");
+    const finalMessage = document.getElementById("finalMessage");
+
+    let currentIndex = 0;
+    let isTransitioning = false;
+
+    btn.addEventListener("click", () => {
+      // 마지막 이미지에서 버튼 → 네이버 이동
+      if (currentIndex === images.length - 1 && !isTransitioning) {
+        window.location.href = "https://www.naver.com";
+        return;
+      }
+
+      if (isTransitioning) return;
+
+      isTransitioning = true;
+      btn.disabled = true;
+
+      // **페이드인만 있는 전환**
+      currentIndex++;
+      imgEl.style.opacity = "0";  // 먼저 투명하게 만들고
+
+      setTimeout(() => {
+        imgEl.src = images[currentIndex]; // 이미지 변경
+        imgEl.style.opacity = "1";        // 페이드인 시작
+
+        // 페이드인 시간 끝나면 버튼 활성화
+        setTimeout(() => {
+          isTransitioning = false;
+          btn.disabled = false;
+
+          if (currentIndex === images.length - 1) {
+            finalMessage.classList.add("show");
+          }
+        }, 2000);  // 페이드인 시간
+      }, 10); // 살짝 딜레이 줘야 transition 먹힘
+    });
+  </script>
+</body>
+</html>
